@@ -1,0 +1,38 @@
+{
+    "name": "armincms/easy-license",
+    "description": "A Laravel Nova tool.",
+    "keywords": [
+        "laravel",
+        "nova"
+    ],
+    "license": "MIT",
+    "require": {
+        "php": ">=7.1.0",
+        "armincms/armincms": "~0.1",
+        "zareismail/markable": "~0.1",
+        "dillingham/nova-ajax-select": "~1.0",
+        "epartment/nova-dependency-container": "~1.2",
+        "whitecube/nova-flexible-content": "~0.1.13",
+        "armincms/nova-targomaan": "~0.1",
+        "armincms/duration": "~0.2",
+        "armincms/currency": "~0.1",
+        "armincms/bios": "~0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Armincms\\EasyLicense\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Armincms\\EasyLicense\\ServiceProvider"
+            ]
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
