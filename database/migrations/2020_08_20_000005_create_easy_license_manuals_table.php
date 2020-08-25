@@ -21,7 +21,7 @@ class CreateEasyLicenseManualsTable extends Migration
             $table->unsignedBigInteger('card_id')->index();   
             $table->softDeletes();  
             $table->timestamps();
-            $table->timestamp('sold_at');
+            $table->timestamp('sold_at')->nullable();
 
             $table
                 ->foreign('card_id')
