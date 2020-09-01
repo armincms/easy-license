@@ -20,4 +20,66 @@ class Credit extends Model
     {
     	return $this->belongsTo(License::class);
     }  
+
+    public function startIfNotStarted()
+    { 
+        if(! $this->inUse()) {
+            $this->markAsInUse();
+        }
+
+        return $this; 
+    }
+
+    public function inUse()
+    {
+        return ! is_null($this->expires_on);
+    }
+
+    public function markAsInUse()
+    {
+        $this->forceFill([ 
+            'expires_on' => $this->getExpirationDatetime() 
+        ])->save();
+
+        return $this;
+    }
+
+    public function isExpired()
+    {  
+        return ! is_null($this->expires_on) && optional($this->expires_on)->lessThan(now());
+    }
+
+    protected function getExpirationDatetime()
+    {  
+        return now()->addDays($this->withDuration()->license->duration->days());
+    }
+
+    public function daysLeft()
+    {
+        $expiresOn = $this->expires_on ?? $this->getExpirationDatetime(); 
+
+        return now()->startOfDay()->diffInDays($expiresOn->startOfDay(), false);
+    }
+
+    public function startedAt()
+    {
+        if($this->inUse()) {  
+            return $this->withDuration()->expires_on->subDays($this->license->duration->days());
+        } 
+    }
+
+    public function withDuration()
+    {
+        $this->loadMissing([
+            'license' => function($q) {
+                $q->withTrashed()->with([
+                    'duration' => function($q) {
+                        $q->withTrashed();
+                    }
+                ]);
+            }
+        ]);
+
+        return $this;
+    }
 }
