@@ -53,20 +53,21 @@ class Manual extends Resource
             abort(404);
         }
 
-        return collect($product->fields)->pluck('attributes', 'layout')
-                ->map(function($attributes, $field) {
-                    return $field::make($attributes['name'], "data->{$attributes['name']}")
-                                ->required($required = $attributes['required'])
-                                ->rules($required ? 'required' : []);
-                })->merge([
-                    Boolean::make(__('Sold'), 'sold')
-                        ->default(0)
-                        ->sortable(),
+        return $product
+                    ->prepareFields()
+                    ->map(function($attributes, $field) {
+                        return $field::make($attributes['name'], "data->{$attributes['name']}")
+                                    ->required($required = $attributes['required'])
+                                    ->rules($required ? 'required' : []);
+                    })->merge([
+                        Boolean::make(__('Sold'), 'sold')
+                            ->default(0)
+                            ->sortable(),
 
-                    DateTime::make(__('Sold At'), 'sold_at')
-                        ->exceptOnForms(),
-                ])
-                ->all(); 
+                        DateTime::make(__('Sold At'), 'sold_at')
+                            ->exceptOnForms(),
+                    ])
+                    ->all(); 
     }   
 
     /**

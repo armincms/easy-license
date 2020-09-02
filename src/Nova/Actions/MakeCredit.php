@@ -53,13 +53,13 @@ class MakeCredit extends Action
         $credit = Credit::unguarded(function() use ($license, $data) {
             return Credit::firstOrCreate([
                 'license_id' => $license->id,
-                'data' => collect($license->product->fields())->flatMap(function($field) use ($data) {
+                'data' => collect($license->product->prepareFields())->flatMap(function($field) use ($data) {
                     $name = $field['name'];
 
                     return [
                         $name => data_get($data, $name)
                     ];
-                }),
+                })->toJson(),
             ]);
         });
 

@@ -45,7 +45,7 @@ class Product extends Model implements Authorizable
      *
      * @return array
      */
-    public function fields()
+    public function prepareFields()
     { 
         return collect($this->fields)->pluck('attributes', 'layout');
     }

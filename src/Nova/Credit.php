@@ -31,10 +31,10 @@ class Credit extends Resource
      * @return array
      */
     public function fields(Request $request)
-    {    
-        $license = $this->resource->license->load('product');
+    {     
+        $product = data_get($this->resource->withDuration(), 'license.product');
 
-        $productFields = $this->resource->license->product->fields();
+        $fields = optional($product)->prepareFields();
 
         return [
             ID::make()->sortable(),
@@ -49,7 +49,7 @@ class Credit extends Resource
                 ->readonly()
                 ->sortable(),
 
-            new Panel(__('Data'), $productFields->map(function($attributes, $field) {    
+            new Panel(__('Data'), collect($fields)->map(function($attributes, $field) {    
                 return $field::make($attributes['name'], "data->{$attributes['name']}");
             })->all())
         ];
