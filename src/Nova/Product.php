@@ -4,7 +4,7 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Number, Select, Boolean, BelongsTo};
+use Laravel\Nova\Fields\{ID, Text, Number, Password, Select, Boolean, BelongsTo};
 use NovaAjaxSelect\AjaxSelect;
 use Armincms\Fields\Targomaan;
 use Whitecube\NovaFlexibleContent\Flexible;
