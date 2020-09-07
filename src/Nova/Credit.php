@@ -50,6 +50,8 @@ class Credit extends Resource
                 ->sortable(),
 
             new Panel(__('Data'), collect($fields)->map(function($attributes, $field) {    
+                $field = class_exists($field) ? $field : Text::class;
+
                 return $field::make($attributes['name'], "data->{$attributes['name']}");
             })->all())
         ];
