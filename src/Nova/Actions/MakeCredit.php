@@ -46,9 +46,11 @@ class MakeCredit extends Action
 
         $manufacturer = new Manufacturer($manufacturer);
 
-        $builder = $manufacturer->drivers()->get($license->product->driver)['builder'];
+        $builder = $manufacturer->drivers()->get($license->product->driver)['builder'] ?? function() {
+          return [];
+        };
 
-        $data = []; //$builder::build()
+        $data = $builder();
 
         $credit = Credit::unguarded(function() use ($license, $data) {
             return Credit::firstOrCreate([
@@ -59,7 +61,7 @@ class MakeCredit extends Action
                     return [
                         $name => data_get($data, $name)
                     ];
-                })->toJson(),
+                })->toArray(),
             ]);
         });
 
