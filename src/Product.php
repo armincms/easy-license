@@ -47,6 +47,8 @@ class Product extends Model implements Authorizable
      */
     public function prepareFields()
     { 
-        return collect($this->fields)->pluck('attributes', 'layout');
+        return collect($this->fields)->map(function($field) {
+            return array_merge(['field' => $field['layout']], $field['attributes']);
+        });
     }
 }
