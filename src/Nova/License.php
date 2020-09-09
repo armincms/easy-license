@@ -121,7 +121,7 @@ class License extends Resource
                 ->canRun(function($request) {
                     return $request->user()->can('addCredit', $request->resource());
                 })
-                ->onlyOnTableRow(), 
+                ->exceptOnIndex(), 
         ];
     }
 
