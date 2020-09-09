@@ -49,10 +49,10 @@ class Credit extends Resource
                 ->readonly()
                 ->sortable(),
 
-            new Panel(__('Data'), collect($fields)->map(function($attributes, $field) {    
+            new Panel(__('Data'), collect($fields)->pluck('field', 'name')->map(function($field, $name) {    
                 $field = class_exists($field) ? $field : Text::class;
 
-                return $field::make($attributes['name'], "data->{$attributes['name']}");
+                return $field::make($name, "data->{$name}");
             })->all())
         ];
     } 

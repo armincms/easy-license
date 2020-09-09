@@ -55,10 +55,12 @@ class Manual extends Resource
 
         return $product
                     ->prepareFields()
-                    ->map(function($attributes, $field) {
-                        return $field::make($attributes['name'], "data->{$attributes['name']}")
-                                    ->required($required = $attributes['required'])
-                                    ->rules($required ? 'required' : []);
+                    ->map(function($attributes) {
+                        return with($attributes['field'], function($field) use ($attributes) {
+                            return $field::make($attributes['name'], "data->{$attributes['name']}")
+                                        ->required($required = $attributes['required'])
+                                        ->rules($required ? 'required' : []);
+                        });
                     })->merge([
                         Boolean::make(__('Sold'), 'sold')
                             ->default(0)
