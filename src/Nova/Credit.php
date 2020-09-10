@@ -11,6 +11,13 @@ use Armincms\Fields\Targomaan;
 class Credit extends Resource
 {  
     /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'name';
+    
+    /**
      * The model the resource corresponds to.
      *
      * @var string
@@ -23,6 +30,15 @@ class Credit extends Resource
      * @var array
      */
     public static $with = ['license'];
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'id', 'data',
+    ];
 
     /**
      * Get the fields displayed by the resource.

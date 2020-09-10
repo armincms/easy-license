@@ -17,6 +17,14 @@ class Manufacturer extends Resource
     public static $model = 'Armincms\\EasyLicense\\Manufacturer'; 
 
     /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+    ];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
