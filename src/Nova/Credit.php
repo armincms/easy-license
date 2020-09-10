@@ -72,7 +72,8 @@ class Credit extends Resource
                 $field = class_exists($field) ? $field : Text::class;
 
                 return $this->when(
-                    boolval(request()->get('viaResourceId')), $field::make($name, "data->{$name}")
+                    boolval(request()->get('viaResourceId')) || request()->route('resourceId'), 
+                    $field::make($name, "data->{$name}")
                 );
             })->all())
         ];
