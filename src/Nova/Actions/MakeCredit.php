@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
-use Laravel\Nova\Fields\ActionFields;
+use Laravel\Nova\Fields\{ActionFields, Text, Number};
 use Armincms\EasyLicense\Nova\Manufacturer;
 use Armincms\EasyLicense\Credit;
 
@@ -50,22 +50,27 @@ class MakeCredit extends Action
           return [];
         };
 
-        $data = $builder();
+        $credits = collect(range(1, $fields->get('count')))->map(function() use ($builder, $fields, $license) {
+            return Credit::unguarded(function() use ($license, $builder, $fields) {
+                return Credit::firstOrCreate([
+                    'license_id' => $license->id,
+                    'usage' => $fields->get('usage'),
+                    'data' => collect($license->product->prepareFields())->flatMap(function($field) use ($builder) {
+                        $name = $field['name'];
 
-        $credit = Credit::unguarded(function() use ($license, $data) {
-            return Credit::firstOrCreate([
-                'license_id' => $license->id,
-                'data' => collect($license->product->prepareFields())->flatMap(function($field) use ($data) {
-                    $name = $field['name'];
+                        return [
+                            $name => data_get($builder(), $name)
+                        ];
+                    })->toArray(),
+                ]);
+            });
+        }); 
 
-                    return [
-                        $name => data_get($data, $name)
-                    ];
-                })->toArray(),
-            ]);
-        });
-
-        return Action::push('/resources/el-credits/'. $credit->id); 
+        return $credits->count() > 1
+                    ? Action::push('/resources/el-credits/lens/made-credits', [
+                        'el-credits_search' => $credits->map->getKey()->implode(',')
+                    ]) 
+                    : Action::push('/resources/el-credits/'. $credits->first()->id); 
     }
 
     /**
@@ -75,6 +80,17 @@ class MakeCredit extends Action
      */
     public function fields()
     { 
-        return [];
+        return [
+            Number::make(__('How many?'), 'count')
+                ->min(1)
+                ->max(10)
+                ->required()
+                ->rules('required')
+                ->help(__('Number of credits required')),
+
+            Text::make(__('Whats Usage'), 'usage')
+                ->required()
+                ->rules('required'),
+        ];
     }
 }

@@ -16,7 +16,7 @@ class Credit extends Resource
      * @var string
      */
     public static $title = 'name';
-    
+
     /**
      * The model the resource corresponds to.
      *
@@ -29,7 +29,7 @@ class Credit extends Resource
      *
      * @var array
      */
-    public static $with = ['license'];
+    public static $with = ['license.product'];
 
     /**
      * The columns that should be searched.
@@ -48,7 +48,7 @@ class Credit extends Resource
      */
     public function fields(Request $request)
     {     
-        $product = data_get($this->resource->withDuration(), 'license.product');
+        $product = data_get($this->resource, 'license.product');
 
         $fields = optional($product)->prepareFields();
 
@@ -59,6 +59,9 @@ class Credit extends Resource
                 ->sortable()
                 ->withoutTrashed(),
 
+            Text::make(__('Usage'), 'usage')
+                ->sortable(),
+
             DateTime::make(__('Expires On'), 'expires_on')->sortable(),
 
             DateTime::make(__('Created At'), 'created_at')
@@ -68,7 +71,9 @@ class Credit extends Resource
             new Panel(__('Data'), collect($fields)->pluck('field', 'name')->map(function($field, $name) {    
                 $field = class_exists($field) ? $field : Text::class;
 
-                return $field::make($name, "data->{$name}");
+                return $this->when(
+                    boolval(request()->get('viaResourceId')), $field::make($name, "data->{$name}")
+                );
             })->all())
         ];
     } 
@@ -94,7 +99,22 @@ class Credit extends Resource
     public function authorizedToUpdate(Request $request)
     { 
         return false;
-    } 
+    }  
+
+    /**
+     * Get the lenses available on the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function lenses(Request $request)
+    {
+        return [
+            (new Lenses\MadeCredits)->canSee(function($request) {
+                return $request->route('lens');
+            })
+        ];
+    }
 }
 
 		
