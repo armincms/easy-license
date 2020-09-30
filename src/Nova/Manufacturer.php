@@ -4,7 +4,7 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Select, Boolean};
+use Laravel\Nova\Fields\{ID, Text, Select, Boolean, KeyValue};
 use Armincms\Fields\Targomaan;
 
 class Manufacturer extends Resource
@@ -48,6 +48,14 @@ class Manufacturer extends Resource
     		new Targomaan([ 
     			Text::make(__('Name'), 'name')
     				->required(), 
+
+                KeyValue::make(__('Products Features'), 'features')
+                    ->keyLabel(__('Feature'))
+                    ->valueLabel(__('Description'))
+                    ->actionText(__('Append A New Feature'))
+                    ->resolveUsing(function($value) {
+                        return is_array($value) ? $value : (array) json_decode($value, true);
+                    }),
 
                 $this->abstractField(),
 

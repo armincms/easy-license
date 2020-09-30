@@ -16,6 +16,7 @@ class CreateEasyLicenseManufacturerTranslationsTable extends Migration
         Schema::create('el_manufacturer_translations', function (Blueprint $table) {
             $table->bigIncrements('id'); 
             $table->description();
+            $table->json('fetures')->nullable();
             $table->unsignedBigInteger('manufacturer_id')->index(); 
             $table->timestamps();    
             $table->softDeletes();
