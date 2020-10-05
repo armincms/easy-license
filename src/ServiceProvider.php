@@ -9,7 +9,7 @@ use Armincms\EasyLicense\Http\Middleware\Authorize;
 use Illuminate\Support\Facades\Gate;
 
 class ServiceProvider extends LaravelServiceProvider
-{
+{  
     /**
      * Bootstrap any application services.
      *
@@ -17,12 +17,20 @@ class ServiceProvider extends LaravelServiceProvider
      */
     public function boot()
     { 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');  
-
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');   
+        $this->registerPolicies();
+        $this->registerWebComponents();
+        $this->configureModules();
+        $this->configureMenus();
         LaravelNova::serving([$this, 'servingNova']);
 
-        $this->registerPolicies();
+        $this->app->booted(function() {
+            $this->routes();
+        });
+    }
 
+    protected function routes()
+    { 
         app('router')->group([
             'middleware' => 'nova',
             'namespace'  => __NAMESPACE__.'\Http\Controllers',
@@ -56,4 +64,32 @@ class ServiceProvider extends LaravelServiceProvider
         Gate::policy(Manual::class, Policies\EasyLicenseCardLicense::class);
         Gate::policy(Card::class, Policies\EasyLicenseCard::class);
     }
+
+    public function registerWebComponents()
+    {  
+        \Site::push('easy-license', function($easyLicense) {
+            $easyLicense->directory('easy-license');
+            $easyLicense->pushComponent(new Components\Manufacturer);
+            $easyLicense->pushComponent(new Components\Product);
+            $easyLicense->pushComponent(new Components\Shopping);
+        });  
+    }
+
+    public function configureModules()
+    {    
+        \Config::set('module.locatables.manufacturer', [
+            'title' => 'Manufacturer', 
+            'name'  => 'manufacturer',
+            'items' => [ConfigLocate::class, 'all'],
+        ]);  
+    }
+
+    public function configureMenus()
+    {
+        
+        \Config::set('menu.menuables.manufacturer', [
+            'title' => 'Manufacturer',
+            'callback' => [ConfigLocate::class, 'active'],
+        ]);   
+    } 
 }

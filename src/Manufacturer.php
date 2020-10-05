@@ -7,6 +7,8 @@ use Core\HttpSite\Component;
 
 class Manufacturer extends Model 
 {     
+    use IntractsWithSite;
+    
     protected $translator = 'layeric';
 
     protected $medias = [
@@ -24,5 +26,10 @@ class Manufacturer extends Model
     public function component() : Component
     {
         return new Components\Manufacturer;
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
     }
 }
