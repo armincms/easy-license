@@ -55,6 +55,11 @@ class Manufacturer extends Resource
                     ->actionText(__('Append A New Feature'))
                     ->resolveUsing(function($value) {
                         return is_array($value) ? $value : (array) json_decode($value, true);
+                    })
+                    ->fillUsing(function($request, $requestAttribute, $model, $attribute) {
+                        if ($request->exists($requestAttribute)) {
+                            $model->{$attribute} = $request[$requestAttribute];
+                        }
                     }),
 
                 $this->abstractField(),
