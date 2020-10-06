@@ -34,7 +34,7 @@ class ServiceProvider extends LaravelServiceProvider
         app('router')->group([
             'middleware' => 'nova',
             'namespace'  => __NAMESPACE__.'\Http\Controllers',
-            'prefix'     => 'ajax-selection'
+            'prefix'     => 'nova-api/ajax-selection'
         ], function($router) {
             $router->get('{manufacturer}/drivers', 'ManufacturerController@handle');
             $router->get('/{product}/licenses', 'LicenseController@handle'); 

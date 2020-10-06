@@ -33,7 +33,7 @@ class Product extends Resource
 				->rules('required'),
 
 			AjaxSelect::make(__('Driver'), 'driver')
-    			->get('/ajax-selection/{manufacturer}/drivers')
+    			->get('/nova-api/ajax-selection/{manufacturer}/drivers')
 				->parent('manufacturer') 
 				->required()
 				->rules('required'),
