@@ -51,4 +51,11 @@ class Product extends Model implements Authorizable
             return array_merge(['field' => $field['layout']], $field['attributes']);
         });
     }
+
+    public function featuredImages()
+    {
+        return $this->getConversions(
+            $this->getFirstMedia('image'), config('easy-license.product.schemas', ['main', 'thumbnail'])
+        );
+    }
 }
