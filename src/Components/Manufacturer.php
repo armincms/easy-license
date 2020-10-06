@@ -37,17 +37,23 @@ class Manufacturer extends Component implements Resourceable
 		); 
 
 		return (string) $this
-							->firstLayout($docuemnt, $this->config('layout'), 'manufacturer')
+							->firstLayout($docuemnt, $this->config('layout'), 'clean-manufacturer')
 							->display($manufacturer->toArray(), $docuemnt->component->config('layout', [])); 
 	}     
 
 	public function products()
 	{
-		return $this->resource->load('products')->products->map(function($product) {
-			return [
-				'name' => $product->name,
-				'url'  => $this->resource->site()->url("product/{$product->id}"),
-			];
-		});
+		return $this->resource->products()->paginate(6);
+	}
+
+	public function productInformation($product)
+	{ 
+		return [
+            'id'    => $product->id,
+            'name'  => $product->name,
+            'image' => data_get($product->featuredImages(), 'thumbnail'),
+            'url'   => $this->resource->site()->url("product/{$product->id}"),
+            'abstract'  => $product->abstract,
+		]; 
 	}
 }

@@ -56,7 +56,7 @@ class Manufacturer extends Resource
                     ->resolveUsing(function($value) {
                         return is_array($value) ? $value : (array) json_decode($value, true);
                     })
-                    ->fillUsing(function($request, $requestAttribute, $model, $attribute) {
+                    ->fillUsing(function($request, $model, $attribute, $requestAttribute) {
                         if ($request->exists($requestAttribute)) {
                             $model->{$attribute} = $request[$requestAttribute];
                         }
@@ -64,7 +64,7 @@ class Manufacturer extends Resource
 
                 $this->abstractField(),
 
-                $this->gutenbergField(),
+                // $this->gutenbergField(),
     		]),
 
             new Panel(__('Other'), [ 
