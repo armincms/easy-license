@@ -37,4 +37,11 @@ abstract class Model extends LaravelModel implements HasMedia, Authorizable
 
         return Str::startsWith($table, 'el_') ? $table : "el_{$table}";
     } 
+
+    public function featuredImages()
+    {
+        return $this->getConversions(
+            $this->getFirstMedia('image'), config('easy-license.product.schemas', ['main', 'thumbnail'])
+        );
+    }
 }
