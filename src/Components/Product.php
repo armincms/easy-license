@@ -8,7 +8,7 @@ use Core\HttpSite\Contracts\Resourceable;
 use Core\HttpSite\Concerns\IntractsWithResource;
 use Core\HttpSite\Concerns\IntractsWithLayout;
 use Core\Document\Document;
-use Armincms\EasyLicense\Product as Model;
+use Armincms\EasyLicense\{Product as Model, Nova\EasyLicense}; 
 
 class Product extends Component implements Resourceable
 {       
@@ -43,6 +43,11 @@ class Product extends Component implements Resourceable
 	public function licenses()
 	{
 		return $this->resource->load('licenses')->licenses;
+	}
+
+	public function currency()
+	{
+		return EasyLicense::option('el_currency', 'IRR');
 	}
 
 	public function countries()
