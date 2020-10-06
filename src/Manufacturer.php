@@ -8,6 +8,13 @@ use Core\HttpSite\Component;
 class Manufacturer extends Model 
 {     
     use IntractsWithSite;
+
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    protected $with = ['translations'];
     
     protected $translator = 'layeric';
 
