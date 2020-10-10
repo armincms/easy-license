@@ -16,7 +16,8 @@
         "armincms/nova-targomaan": "~0.1",
         "armincms/duration": "~0.2",
         "armincms/currency": "~0.1",
-        "armincms/bios": "~0.1"
+        "armincms/bios": "~0.1",
+        "armincms/arminpay": "dev-master"
     },
     "autoload": {
         "psr-4": {
