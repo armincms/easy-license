@@ -20,6 +20,7 @@ class ServiceProvider extends LaravelServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');   
         $this->registerPolicies();
         $this->registerWebComponents();
+        $this->configureOrderables();
         $this->configureModules();
         $this->configureMenus();
         LaravelNova::serving([$this, 'servingNova']);
@@ -72,7 +73,15 @@ class ServiceProvider extends LaravelServiceProvider
             $easyLicense->pushComponent(new Components\Manufacturer);
             $easyLicense->pushComponent(new Components\Product);
             $easyLicense->pushComponent(new Components\Shopping);
+            $easyLicense->pushComponent(new Components\Invoice);
         });  
+    }
+
+    public function configureOrderables()
+    {    
+        $this->app->resolving('arminpay.order', function($manager) { 
+            $manager->register(new Orderables\LicenseProduct);
+        });
     }
 
     public function configureModules()
