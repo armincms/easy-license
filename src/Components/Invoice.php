@@ -9,7 +9,7 @@ use Core\HttpSite\Contracts\Resourceable;
 use Core\Document\Document;
 use Armincms\EasyLicense\Licence;
 use Armincms\EasyLicense\Mails\OrderShipped; 
-use Component\Arminpay\Order;
+use Armincms\Arminpay\Order;
 
 class Invoice extends BaseComponent implements Resourceable
 {       

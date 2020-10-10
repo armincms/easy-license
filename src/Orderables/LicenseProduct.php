@@ -1,9 +1,9 @@
 <?php 
 namespace Armincms\EasyLicense\Orderables;
 
-use Component\Arminpay\Contracts\Orderable;
-use Component\Arminpay\Contracts\Product as ProductContract;
-use Component\Arminpay\Product; 
+use Armincms\Arminpay\Contracts\Orderable;
+use Armincms\Arminpay\Contracts\Product as ProductContract;
+use Armincms\Arminpay\Product; 
 use Armincms\EasyLicense\License; 
 use Armincms\EasyLicense\Nova\EasyLicense; 
 

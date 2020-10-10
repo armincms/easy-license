@@ -1,7 +1,7 @@
 <?php 
 namespace Armincms\EasyLicense\Mails;
 
-use Component\Arminpay\Order;
+use Armincms\Arminpay\Order;
 use Illuminate\Bus\Queueable; 
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
