@@ -17,7 +17,8 @@
         "armincms/duration": "~0.2",
         "armincms/currency": "~0.1",
         "armincms/bios": "~0.1",
-        "armincms/arminpay": "~1.0"
+        "armincms/arminpay": "~1.0",
+        "armincms/chain": "~1.0"
     },
     "autoload": {
         "psr-4": {
