@@ -18,6 +18,7 @@ class Translation extends Model
      */
     protected $casts = [
         'seo' => 'json', 
+        'features' => 'json',
     ]; 
     
     /**

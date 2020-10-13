@@ -19,6 +19,7 @@ class Product extends Model implements Authorizable
         'name' => 'json',
         'fields' => 'json',
         'abstract' => 'json',
+        'features' => 'array',
     ];
 
     protected $medias = [

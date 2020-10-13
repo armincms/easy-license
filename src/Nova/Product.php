@@ -4,9 +4,9 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Number, Password, Select, Boolean, BelongsTo};
+use Laravel\Nova\Fields\{ID, Text, Number, Password, Select, Boolean, BooleanGroup, BelongsTo};
 use NovaAjaxSelect\AjaxSelect;
-use Armincms\Fields\Targomaan;
+use Armincms\Fields\{Targomaan, Chain};
 use Whitecube\NovaFlexibleContent\Flexible;
 
 class Product extends Resource
@@ -19,6 +19,13 @@ class Product extends Resource
     public static $model = 'Armincms\\EasyLicense\\Product'; 
 
     /**
+     * The relationships that should be eager loaded when performing an index query.
+     *
+     * @var array
+     */
+    public static $with = ['manufacturer'];
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -27,16 +34,47 @@ class Product extends Resource
     public function fields(Request $request)
     {    
     	return [ 
-			BelongsTo::make(__('Manufacturer'), 'manufacturer', Manufacturer::class) 
-				->withoutTrashed()
-				->required()
-				->rules('required'),
 
-			AjaxSelect::make(__('Driver'), 'driver')
-    			->get('/nova-api/ajax-selection/{manufacturer}/drivers')
-				->parent('manufacturer') 
-				->required()
-				->rules('required'),
+            Chain::as('manufacturer', function() {
+                return [ 
+                    Select::make(__('Manufacturer'), 'manufacturer_id', ) 
+                        ->options(Manufacturer::newModel()->get()->keyBy->getKey()->map->name)
+                        ->required()
+                        ->rules('required'),
+                ];
+            }),
+
+            Chain::with('manufacturer', function($request) {
+                $manufacturer = new Manufacturer(
+                    Manufacturer::newModel()->findOrFail($request->get('manufacturer_id'))
+                );
+ 
+                $drivers = collect($manufacturer->drivers())->map(function($driver, $name) {
+                    return $driver['title'] ?? $name;
+                })->values(); 
+
+                return with([ 
+                    Select::make(__('Driver'), 'driver') 
+                        ->options($drivers)
+                        ->required()
+                        ->rules('required'),
+                ], function($fields) use ($manufacturer) { 
+
+                    if(! empty($manufacturer->features)) {
+                        return array_merge($fields, [ 
+                            BooleanGroup::make(__('Features'), 'features') 
+                                ->options(collect($manufacturer->features)->map(function($description, $label) {
+                                    return empty($description) ? $label : $description;
+                                })->all())
+                                ->required()
+                                ->rules('required'),
+                        ]);
+                    }
+
+                    return $fields;
+
+                }); 
+            }),  			
         
             Boolean::make(__('Active'), 'marked_as')
                 ->default(0),
@@ -46,7 +84,13 @@ class Product extends Resource
     				->required(), 
 
     			$this->abstractField(),   
-    		]), 
+    		]),  
+
+            BooleanGroup::make(__('Features'), 'features') 
+                ->options(collect(($this->manufacturer)->features)->map(function($description, $label) {
+                    return empty($description) ? $label : $description;
+                })->all())
+                ->onlyOnDetail(),  
 
             Flexible::make(__('Required Data'), 'fields')
                 ->addLayout(__('Number'), Number::class, [

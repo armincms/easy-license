@@ -52,15 +52,7 @@ class Manufacturer extends Resource
                 KeyValue::make(__('Products Features'), 'features')
                     ->keyLabel(__('Feature'))
                     ->valueLabel(__('Description'))
-                    ->actionText(__('Append A New Feature'))
-                    ->resolveUsing(function($value) {
-                        return is_array($value) ? $value : (array) json_decode($value, true);
-                    })
-                    ->fillUsing(function($request, $model, $attribute, $requestAttribute) {
-                        if ($request->exists($requestAttribute)) {
-                            $model->{$attribute} = $request[$requestAttribute];
-                        }
-                    }),
+                    ->actionText(__('Append A New Feature')),
 
                 $this->abstractField(),
 
