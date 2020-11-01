@@ -66,15 +66,16 @@ class Credit extends Resource
 
             DateTime::make(__('Created At'), 'created_at')
                 ->readonly()
-                ->sortable(),
+                ->sortable(), 
+		
+            new Panel(__('Data'), collect($fields)->pluck('field', 'name')->map(function($field, $name) use ($request) {    
+                return $this->when($request->viaRelationship() || request()->route('resourceId'), function() use ($field, $name) { 
+                    $field = class_exists($field) ? $field : Text::class;
 
-            new Panel(__('Data'), collect($fields)->pluck('field', 'name')->map(function($field, $name) {    
-                $field = class_exists($field) ? $field : Text::class;
-
-                return $this->when(
-                    boolval(request()->get('viaResourceId')) || request()->route('resourceId'), 
-                    $field::make($name, "data->{$name}")
-                );
+                    return $field::make($name, "data->{$name}")->displayUsing(function($value) {
+                        return '<p style="direction: ltr">' . $value.'</p>';
+                    })->asHtml();
+                });
             })->all())
         ];
     } 
