@@ -32,4 +32,14 @@ class EasyLicense extends Resource
                 ]),
         ];
     }
+
+    /**
+     * Get the price currency.
+     * 
+     * @return string
+     */
+    public static function currency(): string
+    {
+        return static::option('el_currency', 'IRR');
+    }
 }

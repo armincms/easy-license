@@ -7,6 +7,7 @@ use Component\Blog\Blog;
 use Core\HttpSite\Contracts\Resourceable;
 use Core\HttpSite\Concerns\IntractsWithResource;
 use Core\HttpSite\Concerns\IntractsWithLayout;
+use Core\HttpSite\Concerns\HasInternalLayout;
 use Core\Document\Document;
 use Armincms\EasyLicense\Manufacturer as Model;
 
@@ -51,9 +52,15 @@ class Manufacturer extends Component implements Resourceable
 		return [
             'id'    => $product->id,
             'name'  => $product->name,
-            'image' => data_get($product->featuredImages(), 'thumbnail'),
+            'image' => $product->featuredImages(),
             'url'   => $this->resource->site()->url("product/{$product->id}"),
+            'features'  => $product->features(),
             'abstract'  => $product->abstract,
 		]; 
+	} 
+
+	public function productLayout($docuemnt)
+	{
+		return $this->firstLayout($docuemnt, $this->config('layout.product'), 'clean-license-product-review');
 	}
 }

@@ -1,12 +1,12 @@
 <?php
 
 namespace Armincms\EasyLicense;
-
-use Illuminate\Support\Facades\Route;
+ 
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider; 
-use Laravel\Nova\Nova as LaravelNova;
-use Armincms\EasyLicense\Http\Middleware\Authorize; 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Event;
+use Laravel\Nova\Nova as LaravelNova; 
+use Armincms\Orderable\Events\OrderCompleted;
 
 class ServiceProvider extends LaravelServiceProvider
 {  
@@ -17,13 +17,14 @@ class ServiceProvider extends LaravelServiceProvider
      */
     public function boot()
     { 
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');   
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations'); 
+        LaravelNova::serving([$this, 'servingNova']); 
+        $this->registerEventListeners();
+        $this->registerWebComponents(); 
         $this->registerPolicies();
-        $this->registerWebComponents();
         $this->configureOrderables();
         $this->configureModules();
         $this->configureMenus();
-        LaravelNova::serving([$this, 'servingNova']);
 
         $this->app->booted(function() {
             $this->routes();
@@ -56,6 +57,11 @@ class ServiceProvider extends LaravelServiceProvider
         ]); 
     } 
 
+    public function registerEventListeners()
+    { 
+        Event::listen(OrderCompleted::class, Listeners\OrderCompleted::class);
+    }
+
     public function registerPolicies()
     { 
         Gate::policy(Manufacturer::class, Policies\EasyLicenseManufacturer::class);
@@ -72,8 +78,9 @@ class ServiceProvider extends LaravelServiceProvider
             $easyLicense->directory('easy-license');
             $easyLicense->pushComponent(new Components\Manufacturer);
             $easyLicense->pushComponent(new Components\Product);
-            $easyLicense->pushComponent(new Components\Shopping);
-            $easyLicense->pushComponent(new Components\Invoice);
+            $easyLicense->pushComponent(new Components\Checkout);
+            $easyLicense->pushComponent(new Components\Credit);
+            $easyLicense->pushComponent(new Components\Order);
         });  
     }
 

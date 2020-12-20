@@ -44,4 +44,19 @@ abstract class Model extends LaravelModel implements HasMedia, Authorizable
             $this->getFirstMedia('image'), config('easy-license.product.schemas', ['main', 'thumbnail'])
         );
     }
+
+
+    /**
+     * Convert the model instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return collect(parent::toArray())->map(function($value, $attribute) {
+            return $this->getAttribute($attribute, $value);
+        })->merge([
+            'image' => $this->featuredImages()
+        ])->toArray();
+    }
 }

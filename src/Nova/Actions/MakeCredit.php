@@ -8,8 +8,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\{ActionFields, Text, Number};
-use Armincms\EasyLicense\Nova\Manufacturer;
-use Armincms\EasyLicense\Credit;
 
 class MakeCredit extends Action
 {
@@ -34,37 +32,9 @@ class MakeCredit extends Action
             ]); 
         }
 
-        $license->load(['product' => function($q) {
-            $q->withTrashed()->with(['manufacturer' => function($q) {
-                $q->withTrashed();
-            }]);
-        }]);
-
-        if(is_null($manufacturer = optional($license->product)->manufacturer)) {
-            abort(404);
-        }
-
-        $manufacturer = new Manufacturer($manufacturer);
-
-        $builder = $manufacturer->drivers()->get($license->product->driver)['builder'] ?? function() {
-          return [];
-        };
-
-        $credits = collect(range(1, $fields->get('count')))->map(function() use ($builder, $fields, $license) {
-            return Credit::unguarded(function() use ($license, $builder, $fields) {
-                return Credit::firstOrCreate([
-                    'license_id' => $license->id,
-                    'usage' => $fields->get('usage'),
-                    'data' => collect($license->product->prepareFields())->flatMap(function($field) use ($builder) {
-                        $name = $field['name'];
-
-                        return [
-                            $name => data_get($builder(), $name)
-                        ];
-                    })->toArray(),
-                ]);
-            });
-        }); 
+        $credits = $license->createCredit(
+          request()->user(), $fields->get('usage'), intval($fields->get('count')) ?: 1
+        );
 
         return $credits->count() > 1
                     ? Action::push('/resources/el-credits/lens/made-credits', [

@@ -82,4 +82,9 @@ class Credit extends Model
 
         return $this;
     }
+
+    public function orders()
+    {
+        return $this->belongsToMany(\Armincms\Orderable\Models\Order::class, 'el_credit_order'); 
+    }
 }

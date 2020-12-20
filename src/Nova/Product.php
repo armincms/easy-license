@@ -46,7 +46,7 @@ class Product extends Resource
 
             Chain::with('manufacturer', function($request) {
                 $manufacturer = new Manufacturer(
-                    Manufacturer::newModel()->findOrFail($request->get('manufacturer_id'))
+                    Manufacturer::newModel()->findOrNew($request->get('manufacturer_id'))
                 );
  
                 $drivers = collect($manufacturer->drivers())->map(function($driver, $name) {
@@ -87,7 +87,7 @@ class Product extends Resource
     		]),  
 
             BooleanGroup::make(__('Features'), 'features') 
-                ->options(collect(($this->manufacturer)->features)->map(function($description, $label) {
+                ->options(collect(optional($this->manufacturer)->features)->map(function($description, $label) {
                     return empty($description) ? $label : $description;
                 })->all())
                 ->onlyOnDetail(),  

@@ -35,15 +35,37 @@ class Product extends Component implements Resourceable
 		); 
 
 		return  $this
-					->firstLayout($docuemnt, $this->config('layout'), 'clean-license')
+					->firstLayout($docuemnt, $this->config('layout'), 'clean-license-product')
 					->display($product->toArray(), $docuemnt->component->config('layout', []))
 					->toHtml(); 
-	}     
+	}  
+
+	public function features()
+	{
+		return $this->resource->features();
+	}  
 
 	public function licenses()
 	{
-		return $this->resource->load('licenses')->licenses;
+		return $this->resource->loadMissing('licenses.duration')->licenses;
 	}
+
+	public function licenseLayout($docuemnt)
+	{
+		return $this->firstLayout($docuemnt, $this->config('layout.license'), 'clean-license-review');
+	}
+
+	public function licenseInformation($license)
+	{ 
+		return [
+            'id'    => $license->id,
+            'name'  => $license->name(),
+            'image' => $license->featuredImages(),  
+            'duration'  => optional($license->duration)->label,
+            'oldPrice'  => $license->oldPrice(),
+            'price'  	=> $license->salePrice(),
+		]; 
+	} 
 
 	public function currency()
 	{
