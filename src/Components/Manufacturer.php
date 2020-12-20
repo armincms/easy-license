@@ -54,7 +54,7 @@ class Manufacturer extends Component implements Resourceable
             'name'  => $product->name,
             'image' => $product->featuredImages(),
             'url'   => $this->resource->site()->url("product/{$product->id}"),
-            'features'  => $product->features(),
+            'features'  => $product->getFeatures(),
             'abstract'  => $product->abstract,
 		]; 
 	} 

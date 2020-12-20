@@ -42,7 +42,7 @@ class Product extends Component implements Resourceable
 
 	public function features()
 	{
-		return $this->resource->features();
+		return $this->resource->getFeatures();
 	}  
 
 	public function licenses()

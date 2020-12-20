@@ -41,9 +41,9 @@ class Product extends Model implements Authorizable
         return $this->hasMany(License::class);
     }
 
-    public function features()
+    public function getFeatures()
     {
-        $availables = array_keys(array_filter((array) $this->features));
+        $availables = array_keys(array_filter((array) $this->features ?? []));
 
         return collect(data_get($this->manufacturer, 'features'))->only($availables);
     }
