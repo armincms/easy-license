@@ -56,6 +56,7 @@ class Order extends Component implements Resourceable
 		return tap(User::newModel()->create([
 			'email' 	=> $request->email,
 			'username' 	=> $request->mobile,
+			'password'      => bcrypt($request->mobile),
 		]), function($user) use ($request) {
 			$user->setMeta('mobil', $request->mobil);
 			$user->save();
