@@ -18,7 +18,7 @@
         "armincms/currency": "~0.1",
         "armincms/bios": "~0.1",
         "armincms/orderable": "~0.1",
-        "armincms/chain": "~1.0"
+        "armincms/chain": "~0.4"
     },
     "autoload": {
         "psr-4": {
