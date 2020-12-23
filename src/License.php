@@ -40,16 +40,31 @@ class License extends Model implements Orderable, Saleable
         return $value;
     }
 
+    /**
+     * Query the related Credit.
+     * 
+     * @return \Illuminate\Database\Eloqeunt\Relations\HasMany
+     */
     public function credits()
     {
     	return $this->hasMany(Credit::class);
     } 
 
+    /**
+     * Query the related Product.
+     * 
+     * @return \Illuminate\Database\Eloqeunt\Relations\BelongsTo
+     */
     public function product()
     {
         return $this->belongsTo(Product::class);
-    }
+    }  
 
+    /**
+     * Query the related Duration.
+     * 
+     * @return \Illuminate\Database\Eloqeunt\Relations\BelongsTo
+     */
     public function duration()
     {
         return $this->belongsTo(\Armincms\Duration\Duration::class);
