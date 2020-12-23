@@ -29,6 +29,17 @@ class License extends Model implements Orderable, Saleable
         ],
     ]; 
 
+    /**
+     * Mutate license name attribute to resolve name method error.
+     * 
+     * @param  string $value 
+     * @return string        
+     */
+    public function getNameAttrbiute($value)
+    {
+        return $value;
+    }
+
     public function credits()
     {
     	return $this->hasMany(Credit::class);
