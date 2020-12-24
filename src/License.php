@@ -10,6 +10,15 @@ class License extends Model implements Orderable, Saleable
     use IntractsWithDiscount, IntractsWithCredits;
 
     /**
+     * The model's attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'name' => []
+    ];
+
+    /**
      * The attributes that should be cast to native types.
      *
      * @var array
@@ -27,19 +36,8 @@ class License extends Model implements Orderable, Saleable
                 'easy-license.license', 'easy-license.license.list', '*'
             ]
         ],
-    ]; 
-
-    /**
-     * Mutate license name attribute to resolve name method error.
-     * 
-     * @param  string $value 
-     * @return string        
-     */
-    public function getNameAttrbiute($value)
-    {
-        return $value;
-    }
-
+    ];  
+    
     /**
      * Query the related Credit.
      * 
