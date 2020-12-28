@@ -4,7 +4,7 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Select, Boolean, KeyValue};
+use Laravel\Nova\Fields\{ID, Text, Select, Boolean, KeyValue, HasMany};
 use Armincms\Fields\Targomaan;
 
 class Manufacturer extends Resource
@@ -66,6 +66,8 @@ class Manufacturer extends Resource
                     $this->seoField(),
                 ]),
             ]),
+
+            HasMany::make(__('Products'), 'products', Product::class),
     	];
     }
 

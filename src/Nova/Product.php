@@ -4,7 +4,7 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Number, Password, Select, Boolean, BooleanGroup, BelongsTo};
+use Laravel\Nova\Fields\{ID, Text, Number, Password, Select, Boolean, BooleanGroup, BelongsTo, HasMany};
 use NovaAjaxSelect\AjaxSelect;
 use Armincms\Fields\{Targomaan, Chain};
 use Whitecube\NovaFlexibleContent\Flexible;
@@ -133,6 +133,8 @@ class Product extends Resource
     		new Panel(__('Other'), [
                     $this->imageField(),
     		]),
+
+            HasMany::make(__('Licenses'), 'licenses', License::class),
     	];
     }
 
