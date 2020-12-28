@@ -15,7 +15,7 @@ class License extends Model implements Orderable, Saleable
      * @var array
      */
     protected $attributes = [
-        'name' => []
+        'name' => '[]'
     ];
 
     /**
