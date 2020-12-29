@@ -2,6 +2,7 @@
 
 namespace Armincms\EasyLicense\Nova;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\{ID, Text, Number, Select, Boolean, BelongsTo, HasMany};
@@ -32,7 +33,10 @@ class License extends Resource
     	return [ 
             new Targomaan([
                 Text::make(__('Name'), 'name')
-                    ->exceptOnForms(),
+                    ->exceptOnForms()
+                    ->displayUsing(function($name) {
+                        return Str::words($name, 4);
+                    }),
 
                 Text::make(__('Abstract'), 'abstract')
                     ->onlyOnDetail(),
