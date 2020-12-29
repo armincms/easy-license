@@ -51,7 +51,7 @@ class Product extends Resource
  
                 $drivers = collect($manufacturer->drivers())->map(function($driver, $name) {
                     return $driver['title'] ?? $name;
-                })->values(); 
+                }); 
 
                 return with([ 
                     Select::make(__('Driver'), 'driver') 
