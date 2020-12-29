@@ -19,8 +19,12 @@ class OrderCompleted
             $order = $event->order->loadMissing('saleables.saleable', 'customer');
 
             $order->saleables->flatMap(function($orderItem) use ($order) {
-                return $orderItem->saleable->createCredit($order->customer, __('Online Payment'), $orderItem->count);
-            })->each(function($credit) use ($order) {
+                if($orderItem->saleable->delivery === 'system') {
+                    return $orderItem->saleable->createCredit(
+                        $order->customer, __('Online Payment'), $orderItem->count
+                    ); 
+                }
+            })->filter()->each(function($credit) use ($order) {
                 $credit->orders()->sync($order);
             }); 
         }
