@@ -35,7 +35,7 @@ class License extends Resource
                     ->exceptOnForms(),
 
                 Text::make(__('Abstract'), 'abstract')
-                    ->exceptOnForms(),
+                    ->onlyOnDetail(),
             ]),
 
 			BelongsTo::make(__('Product'), 'product', Product::class) 
