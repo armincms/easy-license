@@ -4,10 +4,11 @@ namespace Armincms\EasyLicense;
 
 use Armincms\Orderable\Contracts\Orderable;
 use Armincms\Orderable\Contracts\Saleable;
+use Armincms\Concerns\HasDiscount;
 
 class License extends Model implements Orderable, Saleable
 {  
-    use IntractsWithDiscount, IntractsWithCredits;
+    use HasDiscount;
 
     /**
      * The model's attributes.
@@ -85,7 +86,7 @@ class License extends Model implements Orderable, Saleable
      */
     public function salePrice(): float
     {
-        return $this->price;
+        return $this->applyDiscount(floatval($this->price));
     }
 
     /**
@@ -95,7 +96,7 @@ class License extends Model implements Orderable, Saleable
      */
     public function oldPrice(): float
     {
-        return $this->salePrice();
+        return $this->price;
     }
 
     /**

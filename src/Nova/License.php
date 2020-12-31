@@ -70,10 +70,10 @@ class License extends Resource
             $this->priceField('Price', 'price', EasyLicense::option('el_currency', 'IRR')),
 
             Text::make(__('Discount'), function() {
-                return $this->discountPrice().PHP_EOL.EasyLicense::option('el_currency', 'IRR'); 
+                return number_format($this->discountPercent($this->price), 2) .'%'; 
             }),
 
-            Select::make(__('Discount'), 'discount->type') 
+            Select::make(__('Discount'), 'discount->apply') 
                 ->options(static::discounts())   
                 ->nullable()
                 ->onlyOnForms(),
@@ -82,14 +82,14 @@ class License extends Resource
                 $this
                     ->priceField(__('Discount Amount'), 'discount->value') 
                     ->onlyOnForms(),
-            ])->dependsOn('discount->type', 'amount'), 
+            ])->dependsOn('discount->apply', 'amount'), 
 
             NovaDependencyContainer::make([
                 Number::make(__('Discount Percent'), 'discount->value')
                     ->default(1)
                     ->min(0)
                     ->onlyOnForms(),
-            ])->dependsOn('discount->type', 'percent'), 
+            ])->dependsOn('discount->apply', 'percentage'), 
 
             Boolean::make(__('Active'), 'marked_as')
                 ->default(0),
@@ -151,7 +151,7 @@ class License extends Resource
     public static function discounts()
     {
         return [ 
-            'percent'   => __('Percent'), 
+            'percentage'   => __('Percent'), 
             'amount'    => __('Amount'),
         ];
     }  
