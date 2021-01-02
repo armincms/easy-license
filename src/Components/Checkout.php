@@ -26,7 +26,11 @@ class Checkout extends Component implements Resourceable
 		); 
 
 		return  $this->firstLayout($docuemnt, $this->config('layout'), 'clean-license-checkout')
-					->display(array_merge($license->toArray(), ['count' => $request->get('count')]))
+					->display(array_merge($license->toArray(), [
+						'count' => $request->get('count'), 
+			            'oldPrice'  => $license->oldPrice(),
+			            'price'  	=> $license->salePrice(),
+					]))
 					->toHtml(); 
 	} 
 
