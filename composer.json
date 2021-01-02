@@ -13,6 +13,7 @@
         "dillingham/nova-ajax-select": "~1.0",
         "epartment/nova-dependency-container": "~1.2",
         "whitecube/nova-flexible-content": "~0.1.13",
+        "pdmfc/nova-action-button": "^0.6.0",
         "armincms/nova-targomaan": "~0.1",
         "armincms/duration": "~0.2",
         "armincms/currency": "~0.1",

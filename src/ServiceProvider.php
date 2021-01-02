@@ -53,6 +53,7 @@ class ServiceProvider extends LaravelServiceProvider
             Nova\License::class,
             Nova\Credit::class,
             Nova\Manual::class,
+            Nova\Order::class,
             Nova\Card::class,
         ]); 
     } 
