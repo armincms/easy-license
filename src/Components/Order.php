@@ -49,7 +49,7 @@ class Order extends Component implements Resourceable
 			return $user;
 		}
 		
-		if($user = User::newModel()->meta('mobile', $request->mobil)->first()) {
+		if($user = User::newModel()->meta('mobile', $request->mobile)->first()) {
 			return $user;
 		}
 
@@ -58,7 +58,7 @@ class Order extends Component implements Resourceable
 			'username' 	=> $request->mobile,
 			'password'      => bcrypt($request->mobile),
 		]), function($user) use ($request) {
-			$user->setMeta('mobil', $request->mobil);
+			$user->setMeta('mobile', $request->mobile);
 			$user->save();
 		}); 
 
