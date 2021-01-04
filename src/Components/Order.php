@@ -44,19 +44,13 @@ class Order extends Component implements Resourceable
 	}  
 
 	public function getUser(Request $request)
-	{ 
-		if($user = User::newModel()->whereEmail($request->email)->first()) {
-			return $user;
-		}
-		
-		if($user = User::newModel()->meta('mobile', $request->mobile)->first()) {
-			return $user;
-		}
-
-		return tap(User::newModel()->create([
+	{  
+		return tap(User::newModel()->updateOrCreate(['email' => $request->email],[
 			'email' 	=> $request->email,
 			'username' 	=> $request->mobile,
-			'password'      => bcrypt($request->mobile),
+			'firstname'	=> $request->firstname,
+			'lastname' 	=> $request->lastname,
+			'password'	=> bcrypt($request->mobile),
 		]), function($user) use ($request) {
 			$user->setMeta('mobile', $request->mobile);
 			$user->save();
