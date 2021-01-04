@@ -8,6 +8,7 @@ use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\{Badge, Text, Number, Password, Select, Boolean, BooleanGroup, BelongsTo, HasMany}; 
 use Armincms\Orderable\Nova\Order as Resource; 
 use Pdmfc\NovaFields\ActionButton;
+use Dpsoft\NovaPersianDate\PersianDateTime;
 
 class Order extends Resource
 { 
@@ -78,8 +79,8 @@ class Order extends Resource
                 return optional($this->transactions->pop())->referenceNumber();
             }),
 
-            Text::make(__('Created At'), function() {
-                return $this->created_at->diffForHumans();
+            PersianDateTime::make(__('Created At'), function() {
+                return $this->created_at;
             }), 
         ];
     } 
