@@ -14,6 +14,13 @@ class Checkout extends Component implements Resourceable
 {       
 	use IntractsWithResource, IntractsWithLayout; 
 
+	/**
+	 * Route Conditions of Component.
+	 * 
+	 * @var null
+	 */
+	protected $middlewares = ['web']; 
+
 	public function toHtml(Request $request, Document $docuemnt) : string
 	{        
 		$license = License::findOrFail($request->route('id'));    

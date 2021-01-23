@@ -16,12 +16,20 @@ class Order extends Component implements Resourceable
 {       
 	use IntractsWithResource, IntractsWithLayout; 
 
+	/**
+	 * Route Conditions of Component.
+	 * 
+	 * @var null
+	 */
+	protected $middlewares = ['web']; 
+
 	public function toHtml(Request $request, Document $docuemnt) : string
 	{        
-		// $request->validate([
-		// 	'email' => 'required|email',
-		// 	'mobil' => 'required|numeric',
-		// ]);
+		$request->validate([
+			'email' => 'required|email',
+			'mobile' => 'required|numeric',
+			'g-recaptcha-response' => 'required|captcha'
+		]);
 
 		$license = License::findOrFail($request->route('id'));    
 		$user = $this->getUser($request);
