@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
 use Laravel\Nova\Fields\{Badge, Text, Number, Password, Select, Boolean, BooleanGroup, BelongsTo, HasMany}; 
-use Armincms\Orderable\Nova\Order as Resource; 
+use Armincms\Orderable\Nova\Invoice as Resource; 
 use Pdmfc\NovaFields\ActionButton;
 use Dpsoft\NovaPersianDate\PersianDateTime;
 
