@@ -19,7 +19,7 @@
         "armincms/duration": "~0.2",
         "armincms/currency": "~0.1",
         "armincms/bios": "~0.1",
-        "armincms/orderable": "~0.1",
+        "armincms/orderable": "~0.2",
         "armincms/chain": "~0.4",
         "armincms/recaptcha": "~0.1"
     },
