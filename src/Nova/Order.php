@@ -41,9 +41,9 @@ class Order extends Resource
                 return is_null($order->customer) ? __('__') : $this->customerDetail($order->customer);
             })->asHtml(),
 
-            Number::make(__('Sale Price'), function() {
+            Number::make(__('Total Price'), function() {
                 return currency_format(
-                    $this->saleables->sum('sale_price'),  $this->saleables->first()['currency'] ?? 'IRR'
+                    $this->saleables->sum->totalPrice(),  $this->saleables->first()['currency'] ?? 'IRR'
                 );
             }),  
 
@@ -76,7 +76,7 @@ class Order extends Resource
                 ->sortable(),
 
             Text::make(__('Bank Reference'), function() {
-                return optional($this->transactions->pop())->referenceNumber();
+                return optional($this->transactions->filter->isSuccessed()->pop())->referenceNumber();
             }),
 
             PersianDateTime::make(__('Created At'), function() {
