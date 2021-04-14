@@ -80,7 +80,7 @@ class Order extends Resource
             }),
 
             PersianDateTime::make(__('Created At'), function() {
-                return $this->created_at;
+                return $this->created_at->setTimezone('Asia/Tehran');
             }), 
         ];
     } 
