@@ -77,7 +77,7 @@ class Order extends Resource
 
             Text::make(__('Bank Reference'), function() {
                 return optional($this->transactions->filter->isSuccessed()->pop())->referenceNumber();
-            }),
+            })->onlyOnDetail(),
 
             PersianDateTime::make(__('Created At'), function() {
                 return $this->created_at->setTimezone('Asia/Tehran');
