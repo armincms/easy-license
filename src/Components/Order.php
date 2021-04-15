@@ -35,17 +35,19 @@ class Order extends Component implements Resourceable
 		$user = $this->getUser($request);
 
 		$order = \DB::transaction(function() use ($request, $license, $user) {
-			return tap(OrderableOrder::create(), function($order) use ($request, $license, $user) {
-				$order->orderable()->associate($license);
-				$order->customer()->associate($user);
-				$order->save();
+			$callback = function($order) use ($request, $license, $user) {
+				// $order->orderable()->associate($license);
+				// $order->customer()->associate($user);
+				// $order->save();
 				$order->add($license, $request->count ?: 1);
 				$order->loadMissing('saleables'); 
 
 				$order->forceFill([
 					'finish_callback' => app('site')->get('easy-license')->url('order/'.$order->trackingCode().'/credits')
 				])->save();
-			});
+			};
+
+			return tap(OrderableOrder::createFromModel($license, $user), $callback);
 		}); 
 
 		return redirect(app('site')->get('orders')->url("{$order->trackingCode()}/billing"));
