@@ -8,7 +8,7 @@ use Armincms\Concerns\HasDiscount;
 
 class License extends Model implements Orderable, Saleable
 {  
-    use HasDiscount;
+    use HasDiscount, IntractsWithCredits;
 
     /**
      * The model's attributes.
