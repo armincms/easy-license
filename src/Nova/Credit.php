@@ -89,7 +89,7 @@ class Credit extends Resource
      */
     public static function authorizedToCreate(Request $request)
     { 
-        return false;
+        return $request->viaRelationship();
     }  
 
     /**
@@ -100,7 +100,7 @@ class Credit extends Resource
      */
     public function authorizedToUpdate(Request $request)
     { 
-        return false;
+        return $request->viaRelationship();
     }  
 
     /**
