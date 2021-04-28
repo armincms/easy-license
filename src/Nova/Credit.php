@@ -4,6 +4,7 @@ namespace Armincms\EasyLicense\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Panel;
+use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\{ID, Text, Number, Select, Boolean, BelongsTo, DateTime};
 use NovaAjaxSelect\AjaxSelect;
 use Armincms\Fields\Targomaan; 
@@ -89,7 +90,7 @@ class Credit extends Resource
      */
     public static function authorizedToCreate(Request $request)
     { 
-        return $request->viaRelationship();
+        return app(NovaRequest::class)->viaRelationship();
     }  
 
     /**
@@ -100,7 +101,7 @@ class Credit extends Resource
      */
     public function authorizedToUpdate(Request $request)
     { 
-        return $request->viaRelationship();
+        return app(NovaRequest::class)->viaRelationship();
     }  
 
     /**
