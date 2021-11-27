@@ -33,7 +33,7 @@ class Card extends Resource
     public function fields(Request $request)
     {    
     	return [   
-            Select::make(__('Product'))  
+            Select::make(__('Product'), 'product')  
                 ->options(Product::newModel()->get()->pluck('name', 'id')->all())
                 ->required() 
                 ->onlyOnForms()
@@ -49,7 +49,7 @@ class Card extends Resource
                 ->readonly($this->manuals->isNotEmpty()),
 
             AjaxSelect::make(__('License'), 'license_id')
-                ->get('/ajax-selection/{product}/licenses')
+                ->get('/nova-api/ajax-selection/{product}/licenses')
                 ->parent('product') 
                 ->required()
                 ->rules('required')
