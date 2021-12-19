@@ -38,7 +38,7 @@ class Order extends Component implements Resourceable
 			$callback = function($order) use ($request, $license, $user) {
 				// $order->orderable()->associate($license);
 				// $order->customer()->associate($user);
-				// $order->save();
+				$order->save();
 				$order->add($license, $request->count ?: 1);
 				$order->loadMissing('saleables'); 
 
