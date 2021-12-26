@@ -66,9 +66,15 @@ class Manual extends Resource
                     ->prepareFields()
                     ->map(function($attributes) {
                         return with($attributes['field'], function($field) use ($attributes) {
-                            return $field::make($attributes['name'], "data->{$attributes['name']}")
+                            return $field::make($attributes['name'])
                                         ->required($required = $attributes['required'])
-                                        ->rules($required ? 'required' : []);
+                                        ->rules($required ? 'required' : [])
+                                        ->fillUsing(function($request, $model, $attribute, $requestAttribute) use ($attributes) {
+                                            $model->setAttribute("data->{$attributes['name']}", $request->get($requestAttribute));
+                                        })
+                                        ->resolveUsing(function($request, $model, $attribute) use ($attributes) {
+                                            return data_get($model->data, $attributes['name']);
+                                        });
                         });
                     })->merge([
                         Boolean::make(__('Sold'), 'sold')
