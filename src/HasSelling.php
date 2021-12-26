@@ -44,7 +44,7 @@ trait HasSelling
      */
     public function scopeSold($query, bool $sale = true)
     {
-        return $this->mark($this->getSaleValue($sale));
+        return $query->mark($this->getSaleValue($sale));
     }
 
     /**
@@ -55,7 +55,7 @@ trait HasSelling
      */
     public function scopeForSales($query)
     {
-        return $this->sold(false);
+        return $query->sold(false);
     }
 
     /**

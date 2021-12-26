@@ -9,6 +9,7 @@ use Core\HttpSite\Concerns\IntractsWithResource;
 use Core\HttpSite\Concerns\IntractsWithLayout;
 use Core\Document\Document; 
 use Armincms\EasyLicense\License;
+use Armincms\EasyLicense\Manual;
 use Armincms\Orderable\Models\Order;
 use Armincms\Nova\User;
 
@@ -51,6 +52,12 @@ class Credit extends Component implements Resourceable
 
 	public function credits()
 	{
+		if ($this->resource->orderable->delivery == 'card') {
+			$manuals = $this->resource->saleables->flatMap->details->pluck('id'); 
+
+			return Manual::withTrashed()->find($manuals->toArray());			
+		}
+
 		return $this->resource->orderable->credits()->whereHas('orders', function($query) {
 			$query->whereKey($this->resource->getKey());
 		})->get();
