@@ -69,6 +69,7 @@ class Manual extends Resource
                             return $field::make($attributes['name'])
                                         ->required($required = $attributes['required'])
                                         ->rules($required ? 'required' : [])
+                                        ->hideFromIndex()
                                         ->fillUsing(function($request, $model, $attribute, $requestAttribute) use ($attributes) {
                                             $model->setAttribute("data->{$attributes['name']}", $request->get($requestAttribute));
                                         })
@@ -79,7 +80,8 @@ class Manual extends Resource
                     })->merge([
                         Boolean::make(__('Sold'), 'sold')
                             ->default(0)
-                            ->sortable(),
+                            ->sortable()
+                            ->exceptOnForms(),
 
                         DateTime::make(__('Sold At'), 'sold_at')
                             ->exceptOnForms(),
