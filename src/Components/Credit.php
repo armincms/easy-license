@@ -10,6 +10,7 @@ use Core\HttpSite\Concerns\IntractsWithLayout;
 use Core\Document\Document; 
 use Armincms\EasyLicense\License;
 use Armincms\EasyLicense\Manual;
+use Armincms\EasyLicense\Mails\Credit as Mailable;
 use Armincms\Orderable\Models\Order;
 use Armincms\Nova\User;
 
@@ -33,12 +34,19 @@ class Credit extends Component implements Resourceable
 		$docuemnt->title(data_get($order, 'seo.title') ?: $order->trackingCode()); 
 		$docuemnt->description(
 			data_get($order, 'seo.description') ?: mb_substr(strip_tags($order->trackingCode()), 0, 100) 
-		); 
+		);
+
+		$this->sendMail(); 
 
 		return  $this->firstLayout($docuemnt, $this->config('layout'), 'clean-license-order')
 					->display(array_merge($order->toArray(), ['count' => $request->get('count')]))
 					->toHtml();  
 	}   
+
+	public function sendMail()
+	{
+		\Mail::to($this->resource->customer)->send(new Mailable($this->credits()));
+	}
 
 	public function saleables()
 	{

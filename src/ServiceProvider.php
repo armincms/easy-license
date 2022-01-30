@@ -17,6 +17,7 @@ class ServiceProvider extends LaravelServiceProvider
      */
     public function boot()
     { 
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'easy-license'); 
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations'); 
         LaravelNova::serving([$this, 'servingNova']); 
         $this->registerEventListeners();
