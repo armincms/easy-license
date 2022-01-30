@@ -42,6 +42,13 @@ class Manual extends Resource
     ];
 
     /**
+     * The number of resources to show per page via relationships.
+     *
+     * @var int
+     */
+    public static $perPageViaRelationship = 15;
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -73,11 +80,13 @@ class Manual extends Resource
                                         ->fillUsing(function($request, $model, $attribute, $requestAttribute) use ($attributes) {
                                             $model->setAttribute("data->{$attributes['name']}", $request->get($requestAttribute));
                                         })
-                                        ->resolveUsing(function($request, $model, $attribute) use ($attributes) {
+                                        ->resolveUsing(function($request, $model, $attribute) use ($attributes) { 
                                             return data_get($model->data, $attributes['name']);
                                         });
                         });
-                    })->merge([
+                    })
+                    ->prepend(ID::make(__('ID'), 'id'))
+                    ->merge([
                         Boolean::make(__('Sold'), 'sold')
                             ->default(0)
                             ->sortable()
@@ -107,4 +116,4 @@ class Manual extends Resource
     }
 }
 
-		
+        
