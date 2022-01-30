@@ -28,7 +28,12 @@ class OrderCompleted
                 if($orderItem->saleable->delivery === 'card') {
                     $credits = Card::where('license_id', $orderItem->saleable->getKey())->whereHas('manuals', function($query) {
                         return $query->forSales();
-                    })->with('manuals')->get()->flatMap->manuals;
+                    })->with([
+                        'manuals' => function($query) {
+                            return $query->forSales();
+                        }
+                    ])->get()->flatMap->manuals;
+                    
                     if ($credits->count() >= $orderItem->count && 
                         collect($orderItem->details)->isEmpty()
                     ) {  
