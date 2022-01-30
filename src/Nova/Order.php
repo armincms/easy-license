@@ -82,6 +82,10 @@ class Order extends Resource
             PersianDateTime::make(__('Created At'), function() {
                 return $this->created_at->setTimezone('Asia/Tehran');
             }), 
+
+            $this->when($request->isMethod('get'), function() {
+                return new Panels\OrderDetail(__('Order Detail'), $this->resource);
+            }),
         ];
     } 
 
