@@ -10,7 +10,6 @@ use Laravel\Nova\Fields\MultiSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use Zareismail\Cypress\Http\Requests\CypressRequest;
 use Zareismail\Gutenberg\GutenbergWidget;
 
 class IndexLicense extends GutenbergWidget
@@ -82,7 +81,7 @@ class IndexLicense extends GutenbergWidget
     public function jsonSerialize()
     {
         return [
-            'resources' => $this->filterLicenses()->map->serializeForWidget($this->getRequest())
+            'resources' => $this->filterLicenses()->map->serializeForWidget($this->getRequest()),
         ];
     }
 
@@ -101,14 +100,14 @@ class IndexLicense extends GutenbergWidget
             ->with(['media', 'duration'])
             ->limit((int) $this->metaValue('count'))
             ->enables()
-            ->when((int) $this->metaValue('users'), fn($query) => $query->whereUsers($this->metaValue('users')))
-            ->when($categories, function($query) use ($categories) {
+            ->when((int) $this->metaValue('users'), fn ($query) => $query->whereUsers($this->metaValue('users')))
+            ->when($categories, function ($query) use ($categories) {
                 $query->whereHas(
                     'categories',
-                    fn($query) => $query->whereKey(Category::newModel()->findMany($categories)->toFlatTree()->modelKeys())
+                    fn ($query) => $query->whereKey(Category::newModel()->findMany($categories)->toFlatTree()->modelKeys())
                 );
             })
-            ->when((int) $this->metaValue('duration'), fn($query) => $query->whereHas('duration', fn($query) => $query->whereKey($this->metaValue('duration'))))
+            ->when((int) $this->metaValue('duration'), fn ($query) => $query->whereHas('duration', fn ($query) => $query->whereKey($this->metaValue('duration'))))
             ->when((int) $this->metaValue('operator'), fn ($query) => $query->where('config->operator', $this->metaValue('operator')))
             ->when($drivers, fn ($query) => $query->whereIn('config->driver', $drivers))
             ->when($deliveries, fn ($query) => $query->whereIn('delivery', $deliveries))
