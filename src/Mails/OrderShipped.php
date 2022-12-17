@@ -1,13 +1,14 @@
-<?php 
+<?php
+
 namespace Armincms\EasyLicense\Mails;
 
 use Armincms\Arminpay\Order;
-use Illuminate\Bus\Queueable; 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
-class OrderShipped extends Mailable/* implements ShouldQueue*/
+class OrderShipped extends Mailable /* implements ShouldQueue*/
 {
     use Queueable, SerializesModels;
 
@@ -34,9 +35,9 @@ class OrderShipped extends Mailable/* implements ShouldQueue*/
      * @return $this
      */
     public function build()
-    {    
-        return $this  
-                ->subject(__("License Purchase Detail"))
+    {
+        return $this
+                ->subject(__('License Purchase Detail'))
                 ->markdown('licence-management::mails.order', ['order' => $this->order]);
     }
 }

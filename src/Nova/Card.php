@@ -1,85 +1,128 @@
-<?php 
+<?php
 
 namespace Armincms\EasyLicense\Nova;
 
-use Illuminate\Http\Request;
-use Laravel\Nova\Panel;
-use Laravel\Nova\Fields\{ID, Text, Number, Select, Boolean, BelongsTo, HasMany};
-use NovaAjaxSelect\AjaxSelect;
-use Armincms\Fields\Targomaan; 
+use Armincms\Contract\Nova\Fields;
+use Armincms\Contract\Nova\User;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\FormData;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Http\Requests\NovaRequest;
 
 class Card extends Resource
-{  
+{
+    use Fields;
+
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = 'Armincms\\EasyLicense\\Card'; 
+    public static $model = \Armincms\EasyLicense\Models\Card::class;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'number';
 
     /**
      * The relationships that should be eager loaded when performing an index query.
      *
      * @var array
      */
-    public static $with = ['manuals'];
+    public static $with = ['license'];
+
+    /**
+     * The columns that should be searched.
+     *
+     * @var array
+     */
+    public static $search = [
+        'number', 'config',
+    ];
 
     /**
      * Get the fields displayed by the resource.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
      * @return array
      */
-    public function fields(Request $request)
-    {    
-    	return [   
-            Select::make(__('Product'), 'product')  
-                ->options(Product::newModel()->get()->pluck('name', 'id')->all())
-                ->required() 
-                ->onlyOnForms()
-                ->readonly($this->manuals->isNotEmpty())
-                ->fillUsing(function() {})
-                ->resolveUsing(function($value, $model, $attribute) {
-                    return optional($model->load('license')->license)->product_id;
-                }),
-
-            BelongsTo::make(__('License'), 'license', License::class)
-                ->exceptOnForms()
-                ->showOnUpdating($this->manuals->isNotEmpty())
-                ->readonly($this->manuals->isNotEmpty()),
-
-            AjaxSelect::make(__('License'), 'license_id')
-                ->get('/nova-api/ajax-selection/{product}/licenses')
-                ->parent('product') 
-                ->required()
-                ->rules('required')
-                ->onlyOnForms() 
-                ->hideWhenUpdating($this->manuals->isNotEmpty()), 
-
-    		new Targomaan([
-    			Text::make(__('Name'), 'name')
-    				->required(),
-    		]), 
-
-            Boolean::make(__('Active'), 'marked_as')
-                ->default(0), 
-
-            HasMany::make(__('Licenses'), 'manuals', Manual::class),
-    	];
-    } 
-
-    /**
-     * Get the actions available on the entity.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    public function actions(Request $request)
+    public function fields(NovaRequest $request)
     {
         return [
-            (new Actions\Import)->exceptOnIndex(), 
-        ];
-    } 
-}
+            ID::make(),
 
-		
+            Text::make(__('Card Number'), 'number')
+                ->exceptOnForms()
+                ->filterable()
+                ->sortable(),
+
+            BelongsTo::make(__('Card License'), 'license', License::class)
+                ->withoutTrashed()
+                ->filterable()
+                ->sortable()
+                ->required()
+                ->rules('required')
+                ->inverse('cards')
+                ->placeholder(__('Select a license to sell')),
+
+            BelongsTo::make(__('Card Sold To'), 'user', User::class)
+                ->withoutTrashed()
+                ->filterable()
+                ->sortable()
+                ->nullable()
+                ->showCreateRelationButton()
+                ->placeholder(__('Not sold yet!')),
+
+            KeyValue::make(__('License Information'), 'config->information')
+                ->disableEditingKeys()
+                ->hideWhenUpdating()
+                ->dependsOn('license', function (KeyValue $field, NovaRequest $request, FormData $formData) {
+                    if (! empty((array) $this->config('information'))) {
+                        return;
+                    }
+
+                    $license = License::newModel()->find($formData->license) ?? $request->findParentModel();
+
+                    if (is_null($license)) {
+                        return $field->hide();
+                    }
+
+                    $data = $license->isAutomate() ? $license->generateCardInformation() : [];
+
+                    $field->show();
+
+                    $field->value = collect($license->config('fields'))->merge($data)->map(fn ($value, $key) => $data[$key] ?? null)->toArray();
+                }),
+
+            Textarea::make(__('User Note'), 'note')->nullable(),
+
+            Boolean::make(__('Card is enable'), 'enable')->default(false)->filterable()->sortable(),
+
+            $this->datetimeField(__('Creation date'), 'created_at')->onlyOnDetail(),
+            $this->datetimeField(__('Activation date'), 'activated_at')->exceptOnForms(),
+            $this->datetimeField(__('Expiration date'), 'expires_on'),
+            $this->datetimeField(__('Sale date'), 'sold_at'),
+        ];
+    }
+
+    /**
+     * Get the delivery methods
+     *
+     * @return array
+     */
+    public static function deliveryMethods(): array
+    {
+        return [
+            'manual' => __('Manual'),
+            'system' => __('System'),
+            'card' => __('Card'),
+        ];
+    }
+}

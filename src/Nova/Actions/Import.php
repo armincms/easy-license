@@ -4,7 +4,6 @@ namespace Armincms\EasyLicense\Nova\Actions;
 
 use Armincms\EasyLicense\Manual;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Collection;
 use Laravel\Nova\Actions\Action;
@@ -23,19 +22,19 @@ class Import extends Action
      * @return mixed
      */
     public function handle(ActionFields $fields, Collection $models)
-    {   
+    {
         $cardId = $models->map->getKey()->pop();
-        $items = fastexcel()->import($fields->get('file')) 
-            ->map(function($data) use ($cardId) {
+        $items = fastexcel()->import($fields->get('file'))
+            ->map(function ($data) use ($cardId) {
                 return [
                     'data' => json_encode($data),
                     'created_at' => (string) now(),
                     'updated_at' => (string) now(),
-                    'card_id' => $cardId
+                    'card_id' => $cardId,
                 ];
             });
-      
-        Manual::insert($items->toArray()); 
+
+        Manual::insert($items->toArray());
     }
 
     /**
@@ -50,7 +49,7 @@ class Import extends Action
                 ->required()
                 ->rules('required', 'mimes:xlsx')
                 ->acceptedTypes('.xlsx')
-                ->help(__('Only excel files accepted(.xlsx)'))
+                ->help(__('Only excel files accepted(.xlsx)')),
         ];
     }
 }

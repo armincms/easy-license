@@ -1,17 +1,18 @@
-<?php 
+<?php
 
 namespace Armincms\EasyLicense\Nova;
- 
-use Armincms\Nova\Resource as BaseResource;
+
+use Laravel\Nova\Resource as BaseResource;
 
 abstract class Resource extends BaseResource
-{   
+{
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
     public static $title = 'name';
+
     /**
      * The logical group associated with the resource.
      *
@@ -25,7 +26,7 @@ abstract class Resource extends BaseResource
      * @var array
      */
     public static $search = [
-        'id', 'name',
+        'name',
     ];
 
     /**
@@ -35,6 +36,6 @@ abstract class Resource extends BaseResource
      */
     public static function uriKey()
     {
-        return 'el-' . parent::uriKey();
+        return 'el-'.parent::uriKey();
     }
 }

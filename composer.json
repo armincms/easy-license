@@ -7,22 +7,12 @@
     ],
     "license": "MIT",
     "require": {
-        "php": ">=7.1.0",
-        "armincms/armincms": "~0.1",
-        "zareismail/markable": "~0.1",
-        "dillingham/nova-ajax-select": "~1.0",
-        "epartment/nova-dependency-container": "1.3.2",
-        "whitecube/nova-flexible-content": "~0.1.13",
-        "pdmfc/nova-action-button": "^0.6.0",
-        "dpsoft/nova-persian-date": "^1.1", 
-        "armincms/nova-targomaan": "~0.1",
-        "armincms/duration": "~0.2",
-        "armincms/currency": "~0.1",
-        "armincms/bios": "~0.1",
-        "armincms/orderable": "~0.2",
-        "armincms/chain": "~0.4",
-        "armincms/recaptcha": "~0.1",
-        "rap2hpoutr": "^3.1"
+        "php": ">=8.0",
+        "illuminate/support": "~9.0",
+        "armincms/contract": "^2.0",
+        "armincms/categorizable": "^3.0",
+        "armincms/nova-targomaan": "^2.0",
+        "armincms/duration": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -40,5 +30,6 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true 
+    "prefer-stable": true,
+    "version": "1.0.0"
 }
