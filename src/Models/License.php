@@ -183,7 +183,7 @@ class License extends Model implements HasMedia
      */
     public function discountAmount(): float
     {
-        return $this->originalPrice() - $this->finalPrice();
+        return $this->originalPrice() > 0 ? $this->originalPrice() - $this->finalPrice() : 0;
     }
 
     /**
@@ -193,7 +193,7 @@ class License extends Model implements HasMedia
      */
     public function discountPercent(): float
     {
-        return ($this->discountAmount() / $this->originalPrice()) * 100;
+        return $this->originalPrice() > 0 ? ($this->discountAmount() / $this->originalPrice()) * 100 : 100;
     }
 
     /**
