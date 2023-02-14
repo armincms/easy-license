@@ -10,6 +10,7 @@ use Armincms\Contract\Contracts\HasMedia;
 use Armincms\EasyLicense\Nova\License as NovaLicense;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class License extends Model implements HasMedia
 {
@@ -18,6 +19,7 @@ class License extends Model implements HasMedia
     use HasFactory;
     use InteractsWithMedia;
     use InteractsWithWidgets;
+    use SoftDeletes;
 
     /**
      * The attributes that should be cast.
@@ -155,6 +157,46 @@ class License extends Model implements HasMedia
     }
 
     /**
+     * Get the license raw price.
+     *
+     * @return float
+     */
+    public function originalPrice(): float
+    {
+        return (float) $this->price;
+    }
+
+    /**
+     * Get the discounted license price.
+     *
+     * @return float
+     */
+    public function finalPrice(): float
+    {
+        return $this->originalPrice();
+    }
+
+    /**
+     * Get the discount amount.
+     *
+     * @return float
+     */
+    public function discountAmount(): float
+    {
+        return $this->originalPrice() - $this->finalPrice();
+    }
+
+    /**
+     * Get the discounted percentage.
+     *
+     * @return float
+     */
+    public function discountPercent(): float
+    {
+        return ($this->discountAmount() / $this->originalPrice()) * 100;
+    }
+
+    /**
      * Serialize the model to pass into the client view.
      *
      * @param Zareismail\Cypress\Request\CypressRequest
@@ -165,10 +207,14 @@ class License extends Model implements HasMedia
         return [
             'id' => $this->getKey(),
             'name' => $this->title(),
-            'price' => $this->price,
+            'originalPrice' => $this->originalPrice(),
+            'finalPrice' => $this->finalPrice(),
+            'price' => $this->finalPrice(),
+            'discountAmount' => $this->discountAmount(),
+            'discountPercent' => $this->discountPercent(),
             'delivery' => $this->delivery,
             'users' => $this->users,
-            'duration' => optional($this->duration)->name,
+            'duration' => optional($this->duration)->title(),
         ];
     }
 

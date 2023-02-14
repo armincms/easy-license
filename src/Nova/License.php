@@ -39,7 +39,7 @@ class License extends Resource
         return [
             ID::make(),
 
-            Text::make(__('Licesnse Name'), fn () => $this->title()),
+            Text::make(__('Licesnse Name'), fn () => $this->title())->showWhenPeeking(),
 
             BelongsTo::make(__('License Duration'), 'duration', Duration::class)
                 ->withoutTrashed()
@@ -56,7 +56,8 @@ class License extends Resource
                 ->sortable()
                 ->required()
                 ->rules('required')
-                ->default('manual'),
+                ->default('manual')
+                ->showWhenPeeking(),
 
             Select::make(__('License Operator'), 'config->operator')
                 ->options(static::operators())
@@ -112,18 +113,21 @@ class License extends Resource
                 ->max(1000)
                 ->required()
                 ->rules('required', 'numeric', 'min:1', 'max:1000')
-                ->default(1),
+                ->default(1)
+                ->showWhenPeeking(),
 
             $this->currencyField(__('Price'))
                 ->required()
                 ->rules('required')
                 ->filterable()
-                ->sortable(),
+                ->sortable()
+                ->showWhenPeeking(),
 
             Boolean::make(__('License is enable'), 'enable')
                 ->default(false)
                 ->filterable()
-                ->sortable(),
+                ->sortable()
+                ->showWhenPeeking(),
 
             $this->medialibrary(__('License Image'))->hideFromIndex(),
 

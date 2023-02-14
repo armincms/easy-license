@@ -4,12 +4,14 @@ namespace Armincms\EasyLicense\Cypress\Widgets;
 
 use Armincms\Categorizable\Nova\Category;
 use Armincms\Duration\Nova\Duration;
+use Armincms\EasyLicense\Cypress\Fragments\LicenseCheckout;
 use Armincms\EasyLicense\Nova\License;
 use Laravel\Nova\Fields\FormData;
 use Laravel\Nova\Fields\MultiSelect;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Zareismail\Gutenberg\Gutenberg;
 use Zareismail\Gutenberg\GutenbergWidget;
 
 class IndexLicense extends GutenbergWidget
@@ -30,6 +32,11 @@ class IndexLicense extends GutenbergWidget
     public static function fields($request)
     {
         return [
+            Select::make(__('License Purchase page'), 'config->purchaseFragment')
+                ->options(static::purchaseFragments()->keyBy->getKey()->map->name)
+                ->required()
+                ->rules('required'),
+
             Number::make(__('License display limit'), 'config->count')
                 ->nullable()
                 ->min(1)
@@ -81,7 +88,10 @@ class IndexLicense extends GutenbergWidget
     public function jsonSerialize()
     {
         return [
-            'resources' => $this->filterLicenses()->map->serializeForWidget($this->getRequest()),
+            'resources' => $this->filterLicenses()->map(fn ($license) => array_merge(
+                ['purchaseUrl' => static::purchaseFragments()->find($this->metaValue('purchaseFragment'))->getUrl($license->getKey())],
+                $license->serializeForWidget($this->getRequest())
+            )),
         ];
     }
 
@@ -124,5 +134,10 @@ class IndexLicense extends GutenbergWidget
     public static function relatableTemplates($request, $query)
     {
         $query->handledBy(\Armincms\EasyLicense\Gutenberg\Templates\SingleLicense::class);
+    }
+
+    public static function purchaseFragments()
+    {
+        return Gutenberg::cachedFragments()->forHandler(LicenseCheckout::class);
     }
 }

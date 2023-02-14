@@ -5,7 +5,7 @@ namespace Armincms\EasyLicense\Gutenberg\Templates;
 use Zareismail\Gutenberg\Template;
 use Zareismail\Gutenberg\Variable;
 
-class SingleLicense extends Template
+class PurchaseCheckout extends Template
 {
     /**
      * The logical group associated with the template.
@@ -22,7 +22,9 @@ class SingleLicense extends Template
     public static function variables(): array
     {
         return [
-            Variable::make('id', __('License Id')),
+            Variable::make('number', __('Purchase Number')),
+
+            Variable::make('count', __('License purchase count')),
 
             Variable::make('name', __('License Name')),
 
@@ -40,7 +42,12 @@ class SingleLicense extends Template
 
             Variable::make('users', __('License valid user count')),
 
-            Variable::make('purchaseUrl', __('License purchase link')),
+            Variable::make('card', __('License sold card detail')),
+
+            Variable::make('transaction', __('License successed purchase transaction [trackingCode,referenceNumber,state]')),
+            Variable::make('transactions', __('License purchase transactions [trackingCode,referenceNumber,state]')),
+
+            Variable::make('gates', __('Purchase gateways([{ name, id, image.[common-main|common-thumbnail] }])')),
 
             Variable::make('image.templateName', __(
                 'Image with the required template (example: image.common-main)'

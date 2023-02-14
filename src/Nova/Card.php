@@ -61,7 +61,8 @@ class Card extends Resource
             Text::make(__('Card Number'), 'number')
                 ->exceptOnForms()
                 ->filterable()
-                ->sortable(),
+                ->sortable()
+                ->showWhenPeeking(),
 
             BelongsTo::make(__('Card License'), 'license', License::class)
                 ->withoutTrashed()
@@ -104,11 +105,12 @@ class Card extends Resource
             Textarea::make(__('User Note'), 'note')->nullable(),
 
             Boolean::make(__('Card is enable'), 'enable')->default(false)->filterable()->sortable(),
+            Boolean::make(__('Card is available'), fn () => $this->isAvailable()),
 
-            $this->datetimeField(__('Creation date'), 'created_at')->onlyOnDetail(),
-            $this->datetimeField(__('Activation date'), 'activated_at')->exceptOnForms(),
-            $this->datetimeField(__('Expiration date'), 'expires_on'),
-            $this->datetimeField(__('Sale date'), 'sold_at'),
+            $this->datetimeField(__('Creation date'), 'created_at')->onlyOnDetail()->showWhenPeeking(),
+            $this->datetimeField(__('Activation date'), 'activated_at')->exceptOnForms()->showWhenPeeking(),
+            $this->datetimeField(__('Expiration date'), 'expires_on')->showWhenPeeking(),
+            $this->datetimeField(__('Sale date'), 'sold_at')->showWhenPeeking(),
         ];
     }
 

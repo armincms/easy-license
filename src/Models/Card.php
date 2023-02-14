@@ -6,12 +6,14 @@ use Armincms\Contract\Concerns\Configurable;
 use Armincms\Contract\Concerns\GeneratesTrackingCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Card extends Model
 {
     use Configurable;
     use HasFactory;
     use GeneratesTrackingCode;
+    use SoftDeletes;
 
     /**
      * Tracking code column name.
@@ -26,7 +28,6 @@ class Card extends Model
      * @var array
      */
     protected $casts = [
-        'fields' => 'array',
         'enable' => 'boolean',
         'expires_on' => 'datetime',
         'activated_at' => 'datetime',
@@ -63,6 +64,17 @@ class Card extends Model
     public function scopeEnabled($query)
     {
         return $query->whereEnable(true);
+    }
+
+    /**
+     * Query where is 'enable'.
+     *
+     * @param \Illuminate\Eloquent\Builder
+     * @return \Illuminate\Eloquent\Builder
+     */
+    public function scopeAvailables($query)
+    {
+        return $query->whereIsNull('sold_at');
     }
 
     /**
