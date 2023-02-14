@@ -13,7 +13,7 @@
         "armincms/categorizable": "^3.0",
         "armincms/nova-targomaan": "^2.0",
         "armincms/duration": "^1.0",
-        "armincms/arminpay": "^4.0"
+        "armincms/arminpay": "dev-develop|^4.0"
     },
     "autoload": {
         "psr-4": {
