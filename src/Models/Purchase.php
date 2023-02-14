@@ -152,7 +152,8 @@ class Purchase extends Model implements Billable
      */
     public function serializeForDetailWidget($request)
     {
-        return array_merge($this->license->serializeForDetailWidget($request), $this->user->serializeForDetailWidget($request), [
+        return array_merge($this->license->serializeForDetailWidget($request), [
+            'user' => $this->user->serializeForDetailWidget($request),
             'number' => $this->number,
             'count' => $this->count,
         ]);
