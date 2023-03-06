@@ -204,7 +204,7 @@ class License extends Model implements HasMedia
      */
     public function serializeForDetailWidget($request)
     {
-        return [
+        return array_merge($this->getFirstMediasWithConversions()->toArray(), [
             'id' => $this->getKey(),
             'name' => $this->title(),
             'originalPrice' => $this->originalPrice(),
@@ -215,7 +215,7 @@ class License extends Model implements HasMedia
             'delivery' => $this->delivery,
             'users' => $this->users,
             'duration' => optional($this->duration)->title(),
-        ];
+        ]);
     }
 
     /**
