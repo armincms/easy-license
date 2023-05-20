@@ -28,6 +28,8 @@ class PurchaseCheckout extends Template
 
             Variable::make('name', __('License Name')),
 
+            Variable::make('amount', __('Purchase total amount')),
+
             Variable::make('price', __('License price after discounting')),
 
             Variable::make('finalPrice', __('License price after discounting')),
