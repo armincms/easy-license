@@ -156,6 +156,7 @@ class Purchase extends Model implements Billable
             'user' => $this->user->serializeForDetailWidget($request),
             'number' => $this->number,
             'count' => $this->count,
+            'amount' => $this->amount,
         ]);
     }
 
