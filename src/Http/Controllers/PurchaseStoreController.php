@@ -20,6 +20,7 @@ class PurchaseStoreController extends Controller {
 
         $purchase = Purchase::unguarded(fn () => new Purchase([
             'amount' => $license->finalPrice() * $request->input('count', 1),
+            'count' => $request->input('count', 1),
             'marked_as' => 'checkout',
             'detail' => [
                 'license' => $license->serializeForDetailWidget($request),
