@@ -46,8 +46,8 @@ class PurchaseCheckout extends Template
 
             Variable::make('card', __('License sold card detail')),
 
-            Variable::make('transaction', __('License successed purchase transaction [trackingCode,referenceNumber,state]')),
-            Variable::make('transactions', __('License purchase transactions [trackingCode,referenceNumber,state]')),
+            Variable::make('transaction', __('License successed purchase transaction [trackingCode,referenceNumber,state,date]')),
+            Variable::make('transactions', __('License purchase transactions [trackingCode,referenceNumber,state,date]')),
 
             Variable::make('gates', __('Purchase gateways([{ name, id, image.[common-main|common-thumbnail] }])')),
 
